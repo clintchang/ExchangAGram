@@ -9,16 +9,26 @@
 import UIKit
 //in buildphases we import this so we can access the photo taking functions framework - gives us the uiimagepickercontroller, camera and photo library
 import MobileCoreServices
+import CoreData
 
 //add the protocols for UICollectionViewDataSource and UICollectionViewDelegate
 class FeedViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var collectionView: UICollectionView!
     
+    var feedArray: [AnyObject] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        let request = NSFetchRequest(entityName: "FeedItem")
+        let appDelegate:AppDelegate = (UIApplication.sharedApplication().delegate as AppDelegate)
+        let context:NSManagedObjectContext = appDelegate.managedObjectContext!
+        //fill our feed array with FeedItems
+        feedArray = context.executeFetchRequest(request, error: nil)!
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -89,8 +99,29 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         //this is a dict so we need to pull out the image via a key
         let image = info[UIImagePickerControllerOriginalImage] as UIImage
+        
+        //will convert our UIImage instance into a jpg. returns an nsdata instance
+        let imageData = UIImageJPEGRepresentation(image, 1.0)
+        
+        //get managed object context from app delegate
+        let managedObjectContext = (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext
+        //get entity
+        let entityDescription = NSEntityDescription.entityForName("FeedItem", inManagedObjectContext: managedObjectContext!)
+        //create feed item
+        let feedItem = FeedItem(entity: entityDescription!, insertIntoManagedObjectContext: managedObjectContext!)
+        
+        //set up our feed item and save it
+        feedItem.image = imageData
+        feedItem.caption = "test caption"
+        //save
+        (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
+        
+        feedArray.append(feedItem)
+        
         //dismiss the imagepicker controller so we can go back to our feedview controller
         self.dismissViewControllerAnimated(true, completion: nil)
+        
+        self.collectionView.reloadData()
         
     }
     
@@ -103,11 +134,39 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return feedArray.count
     }
  
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        return UICollectionViewCell()
+        
+        var cell:FeedCell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as FeedCell
+        
+        let thisItem = feedArray[indexPath.row] as FeedItem
+        
+        cell.imageView.image = UIImage(data: thisItem.image)
+        cell.captionLabel.text = thisItem.caption
+        
+        return cell
+
     }
+    
+    //UICollectionViewDelegate
+    
+    //we need a function to segue to the filterview to run the filter
+    
+    func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        let thisItem = feedArray[indexPath.row] as FeedItem
+        
+        //creating an instance of a filterviewcontroller to pass a feeditem into it
+        var filterVC = FilterViewController()
+        filterVC.thisFeedItem = thisItem
+        //this is the segue
+        self.navigationController?.pushViewController(filterVC, animated: false)
+        
+        
+    }
+    
+    
     
 }

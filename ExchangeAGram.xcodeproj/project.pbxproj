@@ -17,6 +17,8 @@
 		F442DD7F1A663BE000B205A4 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442DD7E1A663BE000B205A4 /* FeedCell.swift */; };
 		F442DD811A663E3A00B205A4 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F442DD801A663E3A00B205A4 /* MobileCoreServices.framework */; };
 		F442DD831A66493900B205A4 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442DD821A66493900B205A4 /* FeedItem.swift */; };
+		F4E9459B1A68D52F000E5A94 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E9459A1A68D52F000E5A94 /* FilterViewController.swift */; };
+		F4E9459D1A68E150000E5A94 /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E9459C1A68E150000E5A94 /* FilterCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		F442DD7E1A663BE000B205A4 /* FeedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		F442DD801A663E3A00B205A4 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		F442DD821A66493900B205A4 /* FeedItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
+		F4E9459A1A68D52F000E5A94 /* FilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
+		F4E9459C1A68E150000E5A94 /* FilterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +92,9 @@
 			children = (
 				F442DD591A660B6F00B205A4 /* AppDelegate.swift */,
 				F442DD7C1A66100200B205A4 /* FeedViewController.swift */,
+				F4E9459A1A68D52F000E5A94 /* FilterViewController.swift */,
 				F442DD7E1A663BE000B205A4 /* FeedCell.swift */,
+				F4E9459C1A68E150000E5A94 /* FilterCell.swift */,
 				F442DD601A660B6F00B205A4 /* Main.storyboard */,
 				F442DD631A660B6F00B205A4 /* Images.xcassets */,
 				F442DD651A660B6F00B205A4 /* LaunchScreen.xib */,
@@ -225,6 +231,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4E9459D1A68E150000E5A94 /* FilterCell.swift in Sources */,
+				F4E9459B1A68D52F000E5A94 /* FilterViewController.swift in Sources */,
 				F442DD5A1A660B6F00B205A4 /* AppDelegate.swift in Sources */,
 				F442DD7F1A663BE000B205A4 /* FeedCell.swift in Sources */,
 				F442DD7D1A66100200B205A4 /* FeedViewController.swift in Sources */,
@@ -423,6 +431,7 @@
 				F442DD781A660B7000B205A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F442DD791A660B7000B205A4 /* Build configuration list for PBXNativeTarget "ExchangeAGramTests" */ = {
 			isa = XCConfigurationList;
@@ -431,6 +440,7 @@
 				F442DD7B1A660B7000B205A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
