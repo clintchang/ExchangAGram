@@ -19,6 +19,10 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
     //set our intensity constant
     let kIntensity = 0.7
     
+    var context:CIContext = CIContext(options: nil)
+    
+    var filters:[CIFilter] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -39,6 +43,9 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         self.view.addSubview(collectionView)
         
+        //user our helper function to get CIfilter instances
+        filters = photoFilters()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,14 +56,30 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
     //UICollectionViewDataSource
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        return filters.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         //function returns the cell at a certain indexpath
         let cell: FilterCell = collectionView.dequeueReusableCellWithReuseIdentifier("MyCell", forIndexPath: indexPath) as FilterCell
-        cell.imageView.image = UIImage(named: "Placeholder")
+//        cell.imageView.image = UIImage(named: "Placeholder")
+        
+        //creating a background queue
+        let filterQueue:dispatch_queue_t = dispatch_queue_create("filter queue", nil)
+        
+        //ALWAYS DO UI CHANGES ON THE MAIN THREAD
+        
+        //this dispatches to the queue
+        dispatch_async(filterQueue, { () -> Void in
+            let filterImage = self.filteredImageFromImage(self.thisFeedItem.image, filter: self.filters[indexPath.row])
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void
+                in
+                cell.imageView.image = filterImage
+            })
+        })
+        
         return cell
         
     }
@@ -82,9 +105,44 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
         colorClamp.setValue(CIVector(x: 0.9, y: 0.9, z: 0.9), forKey: "inputMaxComponents")
         colorClamp.setValue(CIVector(x: 0.2, y: 0.2, z: 0.2), forKey: "inputMinComponents")
         
-        return []
+        let composite = CIFilter(name: "CIHardLightBlendMode")
+        //this takes in the output of the sepia filter and allows you to send it to the composite with hardlightblendmode
+        composite.setValue(sepia.outputImage, forKey: kCIInputImageKey)
+        
+        let vignette = CIFilter(name: "CIVignette")
+        //now we combine this with a vignette
+        vignette.setValue(composite.outputImage, forKey: kCIInputImageKey)
+        
+        //change the intensity of the vignette
+        vignette.setValue(kIntensity * 2, forKey: kCIInputIntensityKey)
+        
+        //sets the radius of the vignette * 30
+        vignette.setValue(kIntensity * 30, forKey: kCIInputRadiusKey)
+        
+        return [blur, instant, noir, transfer, unsharpen, monochrome, colorControls, sepia, colorClamp, composite, vignette]
         
     }
+    //helper functions for the filter that takes in the image data and a cifilter instance and returns a UIimage
     
+    func filteredImageFromImage (imageData: NSData, filter: CIFilter) -> UIImage {
+        
+        //ci context instance is reponsible for all the computation of the images
+        
+        //ci image holds the image data. then we convert a ci image to a uiimage for our use
+        
+        let unfilteredImage = CIImage(data: imageData)
+        filter.setValue(unfilteredImage, forKey: kCIInputImageKey)
+        let filteredImage:CIImage = filter.outputImage
+        
+        //lets us set the image size properly
+        let extent = filteredImage.extent()
+        let cgImage: CGImageRef = context.createCGImage(filteredImage, fromRect: extent)
+        
+        let finalImage = UIImage(CGImage: cgImage)
+        
+        return finalImage!
+        
+        
+    }
 
 }
