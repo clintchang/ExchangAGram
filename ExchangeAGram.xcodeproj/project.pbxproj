@@ -16,7 +16,7 @@
 		F442DD7D1A66100200B205A4 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442DD7C1A66100200B205A4 /* FeedViewController.swift */; };
 		F442DD7F1A663BE000B205A4 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442DD7E1A663BE000B205A4 /* FeedCell.swift */; };
 		F442DD811A663E3A00B205A4 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F442DD801A663E3A00B205A4 /* MobileCoreServices.framework */; };
-		F442DD831A66493900B205A4 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442DD821A66493900B205A4 /* FeedItem.swift */; };
+		F4CA2EB61A6B204900CFBD18 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CA2EB51A6B204900CFBD18 /* FeedItem.swift */; };
 		F4E9459B1A68D52F000E5A94 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E9459A1A68D52F000E5A94 /* FilterViewController.swift */; };
 		F4E9459D1A68E150000E5A94 /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E9459C1A68E150000E5A94 /* FilterCell.swift */; };
 /* End PBXBuildFile section */
@@ -45,7 +45,7 @@
 		F442DD7C1A66100200B205A4 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		F442DD7E1A663BE000B205A4 /* FeedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		F442DD801A663E3A00B205A4 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		F442DD821A66493900B205A4 /* FeedItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
+		F4CA2EB51A6B204900CFBD18 /* FeedItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
 		F4E9459A1A68D52F000E5A94 /* FilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		F4E9459C1A68E150000E5A94 /* FilterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -95,11 +95,11 @@
 				F4E9459A1A68D52F000E5A94 /* FilterViewController.swift */,
 				F442DD7E1A663BE000B205A4 /* FeedCell.swift */,
 				F4E9459C1A68E150000E5A94 /* FilterCell.swift */,
+				F4CA2EB71A6B206E00CFBD18 /* Model */,
 				F442DD601A660B6F00B205A4 /* Main.storyboard */,
 				F442DD631A660B6F00B205A4 /* Images.xcassets */,
 				F442DD651A660B6F00B205A4 /* LaunchScreen.xib */,
 				F442DD5B1A660B6F00B205A4 /* ExchangeAGram.xcdatamodeld */,
-				F442DD821A66493900B205A4 /* FeedItem.swift */,
 				F442DD571A660B6F00B205A4 /* Supporting Files */,
 			);
 			path = ExchangeAGram;
@@ -129,6 +129,14 @@
 				F442DD711A660B7000B205A4 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F4CA2EB71A6B206E00CFBD18 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F4CA2EB51A6B204900CFBD18 /* FeedItem.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,7 +244,7 @@
 				F442DD5A1A660B6F00B205A4 /* AppDelegate.swift in Sources */,
 				F442DD7F1A663BE000B205A4 /* FeedCell.swift in Sources */,
 				F442DD7D1A66100200B205A4 /* FeedViewController.swift in Sources */,
-				F442DD831A66493900B205A4 /* FeedItem.swift in Sources */,
+				F4CA2EB61A6B204900CFBD18 /* FeedItem.swift in Sources */,
 				F442DD5D1A660B6F00B205A4 /* ExchangeAGram.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

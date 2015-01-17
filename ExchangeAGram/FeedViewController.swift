@@ -103,6 +103,9 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
         //will convert our UIImage instance into a jpg. returns an nsdata instance
         let imageData = UIImageJPEGRepresentation(image, 1.0)
         
+        let thumbNailData = UIImageJPEGRepresentation(image, 0.1)
+        
+        
         //get managed object context from app delegate
         let managedObjectContext = (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext
         //get entity
@@ -113,6 +116,10 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
         //set up our feed item and save it
         feedItem.image = imageData
         feedItem.caption = "test caption"
+        
+        //set our thumbnail
+        feedItem.thumbNail = thumbNailData
+        
         //save
         (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
         
@@ -154,7 +161,7 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     //we need a function to segue to the filterview to run the filter
     
-    func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         
         let thisItem = feedArray[indexPath.row] as FeedItem
         

@@ -23,6 +23,8 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     var filters:[CIFilter] = []
     
+    let placeHolderImage = UIImage(named: "Placeholder")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -63,23 +65,27 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         //function returns the cell at a certain indexpath
         let cell: FilterCell = collectionView.dequeueReusableCellWithReuseIdentifier("MyCell", forIndexPath: indexPath) as FilterCell
-//        cell.imageView.image = UIImage(named: "Placeholder")
         
-        //creating a background queue
-        let filterQueue:dispatch_queue_t = dispatch_queue_create("filter queue", nil)
-        
-        //ALWAYS DO UI CHANGES ON THE MAIN THREAD
-        
-        //this dispatches to the queue
-        dispatch_async(filterQueue, { () -> Void in
-            let filterImage = self.filteredImageFromImage(self.thisFeedItem.image, filter: self.filters[indexPath.row])
+        if cell.imageView.image == nil {
             
-            dispatch_async(dispatch_get_main_queue(), { () -> Void
-                in
-                cell.imageView.image = filterImage
+            cell.imageView.image = placeHolderImage
+            
+            //creating a background queue
+            let filterQueue:dispatch_queue_t = dispatch_queue_create("filter queue", nil)
+            
+            //ALWAYS DO UI CHANGES ON THE MAIN THREAD
+            
+            //this dispatches to the queue
+            dispatch_async(filterQueue, { () -> Void in
+                let filterImage = self.filteredImageFromImage(self.thisFeedItem.thumbNail, filter: self.filters[indexPath.row])
+                
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    cell.imageView.image = filterImage
+                })
             })
-        })
-        
+            
+        }
+
         return cell
         
     }
@@ -136,9 +142,9 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         //lets us set the image size properly
         let extent = filteredImage.extent()
-        let cgImage: CGImageRef = context.createCGImage(filteredImage, fromRect: extent)
+        let cgImage:CGImageRef = context.createCGImage(filteredImage, fromRect: extent)
         
-        let finalImage = UIImage(CGImage: cgImage)
+        let finalImage = UIImage(CGImage: cgImage, scale: 1.0, orientation: UIImageOrientation.Up)
         
         return finalImage!
         
