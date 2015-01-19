@@ -99,26 +99,8 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
     //function for saving a filtered image
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
 
-        createUIAlertController()
+        createUIAlertController(indexPath)
         
-        
-        
-//        //we need to filter the full-size image
-//        let filterImage = self.filteredImageFromImage(self.thisFeedItem.image, filter: self.filters[indexPath.row])
-//        
-//        //compress the filtered image into jpg
-//        let imageData = UIImageJPEGRepresentation(filterImage, 1.0)
-//        
-//        //update our image
-//        self.thisFeedItem.image = imageData
-//        
-//        //update our thumbnail of our image with jpg compression
-//        let thumbNailData = UIImageJPEGRepresentation(filterImage, 0.1)
-//        self.thisFeedItem.thumbNail = thumbNailData
-//        
-//        //save our stuff
-//        (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
-//        self.navigationController?.popViewControllerAnimated(true)
         
     }
     
@@ -192,7 +174,7 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
 
     //UIAlertController Helper Functions
     
-    func createUIAlertController () {
+    func createUIAlertController (indexPath: NSIndexPath) {
         
         //create a basic alert
         let alert = UIAlertController(title: "Photo Options", message: "Please choose an option", preferredStyle: UIAlertControllerStyle.Alert)
@@ -201,6 +183,8 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
         //this creates a field to enter your caption text
         alert.addTextFieldWithConfigurationHandler { (textField) -> Void in
             textField.placeholder = "Add Caption!"
+            
+            //this is just an extra paramenter that isn't necessary. you can have secure text entry if you want
             textField.secureTextEntry = false
         }
         
@@ -208,18 +192,19 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
         //need to specify as UITextField so compiler knows what to expect
         let textField = alert.textFields![0] as UITextField
         
-        if textField.text != nil {
-            
-            text = textField.text
-        }
         
         let photoAction = UIAlertAction(title: "Post Photo to Facebook with Caption", style: UIAlertActionStyle.Destructive) { (UIAlertAction) -> Void in
-            //will put a function here later
+            self.shareToFacebook(indexPath)
+            var text = textField.text
+            self.saveFilterToCoreData(indexPath, caption: text)
+            
         }
         
         alert.addAction(photoAction)
         
         let saveFilterAction = UIAlertAction(title: "Save Filter without posting on Facebook", style: UIAlertActionStyle.Default) { (UIAlertAction) -> Void in
+            var text = textField.text
+            self.saveFilterToCoreData(indexPath, caption: text)
             
         }
         
@@ -236,7 +221,51 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
         
     }
     
+    func saveFilterToCoreData (indexPath: NSIndexPath, caption: String) {
+        
+        //we need to filter the full-size image
+        let filterImage = self.filteredImageFromImage(self.thisFeedItem.image, filter: self.filters[indexPath.row])
+        
+        //compress the filtered image into jpg
+        let imageData = UIImageJPEGRepresentation(filterImage, 1.0)
+        
+        //update our image
+        self.thisFeedItem.image = imageData
+        
+        //update our thumbnail of our image with jpg compression
+        let thumbNailData = UIImageJPEGRepresentation(filterImage, 0.1)
+        self.thisFeedItem.thumbNail = thumbNailData
+        
+        self.thisFeedItem.caption = caption
+        
+        //save our stuff
+        (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
+        self.navigationController?.popViewControllerAnimated(true)
+
+        
+    }
     
+    
+    func shareToFacebook (indexPath: NSIndexPath) {
+        
+        //this returns a UIimage instance
+        let filterImage = self.filteredImageFromImage(self.thisFeedItem.image, filter: self.filters[indexPath.row])
+        
+        //we have to create this array because ___ expects an array
+        let photos:NSArray = [filterImage]
+        var params = FBPhotoParams()
+        params.photos = photos
+        
+        FBDialogs.presentShareDialogWithPhotoParams(params, clientState: nil) { (call, result, error) -> Void in
+            if (result? != nil) {
+                println (result)
+            } else {
+                println (error)
+            }
+        }
+        
+        
+    }
     
     
     //caching functions
