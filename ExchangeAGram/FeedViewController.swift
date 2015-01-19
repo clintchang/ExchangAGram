@@ -49,6 +49,15 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
         // Pass the selected object to the new view controller.
     }
     */
+    
+    
+   
+    @IBAction func profileTapped(sender: UIBarButtonItem) {
+        
+        self.performSegueWithIdentifier("profileSegue", sender: nil)
+        
+    }
+    
 
     //this is the camera button being pressed
     @IBAction func snapBarButtonItemTapped(sender: UIBarButtonItem) {

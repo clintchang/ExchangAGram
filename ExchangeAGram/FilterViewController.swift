@@ -98,23 +98,27 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     //function for saving a filtered image
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+
+        createUIAlertController()
         
-        //we need to filter the full-size image
-        let filterImage = self.filteredImageFromImage(self.thisFeedItem.image, filter: self.filters[indexPath.row])
         
-        //compress the filtered image into jpg
-        let imageData = UIImageJPEGRepresentation(filterImage, 1.0)
         
-        //update our image
-        self.thisFeedItem.image = imageData
-        
-        //update our thumbnail of our image with jpg compression
-        let thumbNailData = UIImageJPEGRepresentation(filterImage, 0.1)
-        self.thisFeedItem.thumbNail = thumbNailData
-        
-        //save our stuff
-        (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
-        self.navigationController?.popViewControllerAnimated(true)
+//        //we need to filter the full-size image
+//        let filterImage = self.filteredImageFromImage(self.thisFeedItem.image, filter: self.filters[indexPath.row])
+//        
+//        //compress the filtered image into jpg
+//        let imageData = UIImageJPEGRepresentation(filterImage, 1.0)
+//        
+//        //update our image
+//        self.thisFeedItem.image = imageData
+//        
+//        //update our thumbnail of our image with jpg compression
+//        let thumbNailData = UIImageJPEGRepresentation(filterImage, 0.1)
+//        self.thisFeedItem.thumbNail = thumbNailData
+//        
+//        //save our stuff
+//        (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
+//        self.navigationController?.popViewControllerAnimated(true)
         
     }
     
@@ -186,6 +190,54 @@ class FilterViewController: UIViewController, UICollectionViewDataSource, UIColl
         
     }
 
+    //UIAlertController Helper Functions
+    
+    func createUIAlertController () {
+        
+        //create a basic alert
+        let alert = UIAlertController(title: "Photo Options", message: "Please choose an option", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        
+        //this creates a field to enter your caption text
+        alert.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.placeholder = "Add Caption!"
+            textField.secureTextEntry = false
+        }
+        
+        var text:String
+        //need to specify as UITextField so compiler knows what to expect
+        let textField = alert.textFields![0] as UITextField
+        
+        if textField.text != nil {
+            
+            text = textField.text
+        }
+        
+        let photoAction = UIAlertAction(title: "Post Photo to Facebook with Caption", style: UIAlertActionStyle.Destructive) { (UIAlertAction) -> Void in
+            //will put a function here later
+        }
+        
+        alert.addAction(photoAction)
+        
+        let saveFilterAction = UIAlertAction(title: "Save Filter without posting on Facebook", style: UIAlertActionStyle.Default) { (UIAlertAction) -> Void in
+            
+        }
+        
+        alert.addAction(saveFilterAction)
+        
+        let cancelAction = UIAlertAction(title: "Select another Filter", style: UIAlertActionStyle.Cancel) { (UIAlertAction) -> Void in
+            
+        }
+        
+        alert.addAction(cancelAction)
+        
+        //you must display the alert
+        self.presentViewController(alert, animated: true, completion: nil)
+        
+    }
+    
+    
+    
     
     //caching functions
     
