@@ -10,18 +10,38 @@ import UIKit
 //in buildphases we import this so we can access the photo taking functions framework - gives us the uiimagepickercontroller, camera and photo library
 import MobileCoreServices
 import CoreData
+import MapKit
 
 //add the protocols for UICollectionViewDataSource and UICollectionViewDelegate
-class FeedViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class FeedViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var collectionView: UICollectionView!
     
     var feedArray: [AnyObject] = []
     
+    //CLLocation figures where we are and then calls a delegate when we change locations
+    var locationManager: CLLocationManager!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        
+        //most accurate distance
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        //ask user permission to run location services
+        locationManager.requestAlwaysAuthorization()
+        
+        
+        
+        
+        //set up a distance filter
+        locationManager.distanceFilter = 100.0
+        //tell it to start looking for location
+        locationManager.startUpdatingLocation()
         
     }
     
@@ -132,6 +152,16 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
         //set our thumbnail
         feedItem.thumbNail = thumbNailData
         
+        //set the location of the feeditem
+        feedItem.latitude = locationManager.location.coordinate.latitude
+        feedItem.longitude = locationManager.location.coordinate.longitude
+        
+        //this creates a unique id for the feeditem
+        let UUID = NSUUID().UUIDString
+        feedItem.uniqueID = UUID
+        
+        feedItem.filtered = false
+        
         //save
         (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
         
@@ -162,7 +192,16 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         let thisItem = feedArray[indexPath.row] as FeedItem
         
-        cell.imageView.image = UIImage(data: thisItem.image)
+        if thisItem.filtered == true {
+            
+            let returnedImage = UIImage(data: thisItem.image)
+            let image = UIImage(CGImage: returnedImage?.CGImage, scale: 1.0, orientation: UIImageOrientation.Right)
+            
+        } else {
+            cell.imageView.image = UIImage(data: thisItem.image)
+        }
+        
+        
         cell.captionLabel.text = thisItem.caption
         
         return cell
@@ -186,6 +225,11 @@ class FeedViewController: UIViewController, UICollectionViewDataSource, UICollec
         
     }
     
+    //CLLocation manager delegate
+    
+    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+        println("locations = \(locations)")
+    }
     
     
 }

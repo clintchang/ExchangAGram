@@ -30,6 +30,15 @@ class ProfileViewController: UIViewController, FBLoginViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    
+    @IBAction func mapViewButtonTapped(sender: UIButton) {
+        //set the segue 
+        performSegueWithIdentifier("mapSegue", sender: nil)
+        
+    }
+    
+    
+    
     //these 4 functions are needed to conform to the FBloginviewdelegate class
     
     func loginViewShowingLoggedInUser(loginView: FBLoginView!) {
